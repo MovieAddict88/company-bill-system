@@ -15,6 +15,7 @@ if ($user_role == 'employer') {
 ?>
 <div class="container-fluid">
     <h3>Employer Dashboard - Location: <?php echo htmlspecialchars($location); ?></h3>
+    <a href="employer_customers.php" class="btn btn-info" style="margin-bottom: 10px;">View Customers</a>
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
