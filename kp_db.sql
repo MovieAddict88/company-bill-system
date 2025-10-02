@@ -25,6 +25,53 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `locations`
+--
+
+CREATE TABLE `locations` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `locations`
+--
+
+INSERT INTO `locations` (`id`, `name`) VALUES
+(1, 'LUZON'),
+(2, 'VISAYAS'),
+(3, 'MINDANAO');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `branches`
+--
+
+CREATE TABLE `branches` (
+  `id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `branches`
+--
+
+INSERT INTO `branches` (`id`, `location_id`, `name`) VALUES
+(1, 1, 'Cavite'),
+(2, 1, 'Laguna'),
+(3, 1, 'Batangas'),
+(4, 1, 'Rizal'),
+(5, 1, 'Quezon'),
+(6, 2, 'Cebu'),
+(7, 2, 'Bohol'),
+(8, 3, 'Davao del Sur'),
+(9, 3, 'Misamis Oriental');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `billings`
 --
 
@@ -247,6 +294,18 @@ ALTER TABLE `kp_products`
   ADD PRIMARY KEY (`pro_id`),
   ADD UNIQUE KEY `pro_name` (`pro_name`),
   ADD KEY `pro_category` (`pro_category`);
+
+--
+-- Indexes for table `branches`
+--
+ALTER TABLE `branches`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `locations`
+--
+ALTER TABLE `locations`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `kp_user`

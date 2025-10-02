@@ -115,7 +115,15 @@
 					      </div>
 					      <div class="form-group" id="location-group" style="display: none;">
 					        <label for="location">Location</label>
-					        <input type="text" class="form-control" id="location" name="location" placeholder="Location">
+					        <select class="form-control" id="location" name="location">
+							<option>Select Location</option>
+					        </select>
+					      </div>
+					      <div class="form-group" id="branch-group" style="display: none;">
+					        <label for="branch">Branch</label>
+					        <select class="form-control" id="branch" name="branch">
+							<option>Select Branch</option>
+					        </select>
 					      </div>
 				</div>
 				<div class="modal-footer">
@@ -131,11 +139,41 @@
 	include 'includes/footer.php';
 	?>
 	<script type="text/javascript">
+	function getLocations() {
+		$.ajax({
+			method: "GET",
+			url:"get_locations.php",
+			success: function(data){
+				$('#location').html(data);
+			}
+		});
+	}
+
+	getLocations();
+
 	$('#role').on('change', function() {
-		if (this.value == 'employer') {
+		if (this.value == 'employer' || this.value == 'admin') {
 			$('#location-group').show();
+			$('#branch-group').show();
 		} else {
 			$('#location-group').hide();
+			$('#branch-group').hide();
+		}
+	});
+
+	$('#location').on('change', function(){
+		var location_id = $(this).val();
+		if(location_id){
+			$.ajax({
+				type:'POST',
+				url:'get_branches.php',
+				data:'location_id='+location_id,
+				success:function(html){
+					$('#branch').html(html);
+				}
+			});
+		}else{
+			$('#branch').html('<option value="">Select location first</option>');
 		}
 	});
 
