@@ -47,7 +47,7 @@
 		 */
 		public function adminExists( $user_name )
 		{
-			$request = $this->dbh->prepare("SELECT user_name FROM kp_dist WHERE user_name = ?");
+			$request = $this->dbh->prepare("SELECT user_name FROM kp_user WHERE user_name = ?");
 			$request->execute([$user_name]);
 			$Admindata = $request->fetchAll();
 			return sizeof($Admindata) != 0;

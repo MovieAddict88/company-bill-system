@@ -126,10 +126,16 @@
 			url: "user_approve.php?p=add",
 			method:"POST",
 			data:$('#insert_form').serialize(),
+			dataType: "json",
 			success: function (data) {
-				$('#insert_form')[0].reset();
-				$('#add_data_Modal').modal('hide');
-				viewData();
+				if (data.status == 'success') {
+					$('#insert_form')[0].reset();
+					$('#add_data_Modal').modal('hide');
+					viewData();
+					alert(data.message);
+				} else {
+					alert(data.message);
+				}
 			}
 		});
 	});
