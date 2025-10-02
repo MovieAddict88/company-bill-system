@@ -18,7 +18,7 @@
 			//Un-comment this to see a cryptogram of a user_pwd 
 			// echo session::hashuser_pwd($user_pwd);
 			// die;
-			$request = $this->dbh->prepare("SELECT user_name, user_pwd FROM kp_user WHERE user_name = ?");
+			$request = $this->dbh->prepare("SELECT user_name, user_pwd, role, location FROM kp_user WHERE user_name = ?");
 	        if($request->execute( array($user_name) ))
 	        {
 	        	// This is an array of objects.
@@ -27,9 +27,15 @@
 	        	
 	        	// But if things are right, the array should contain only one object, the corresponding user
 	        	// so, we can do this
-	        	$data = $data[0];
+			if (count($data) > 0) {
+					$data = $data[0];
 
-	        	return session::passwordMatch($user_pwd, $data->user_pwd) ? true : false;
+					if (session::passwordMatch($user_pwd, $data->user_pwd)) {
+						return $data;
+					}
+				}
+
+			return false;
 
 	        }else{
 	        	return false;
@@ -77,12 +83,12 @@
 		 * 
 		 */
 		
-		public function addNewAdmin($user_name, $user_pwd, $email, $full_name, $address, $contact)
+		public function addNewAdmin($user_name, $user_pwd, $email, $full_name, $address, $contact, $role = 'admin', $location = null)
 		{
-			$request = $this->dbh->prepare("INSERT INTO kp_user (user_name, user_pwd, email, full_name, address, contact) VALUES(?,?,?,?,?,?) ");
+			$request = $this->dbh->prepare("INSERT INTO kp_user (user_name, user_pwd, email, full_name, address, contact, role, location) VALUES(?,?,?,?,?,?,?,?) ");
 
 			// Do not forget to encrypt the pasword before saving
-			return $request->execute([$user_name, session::hashPassword($user_pwd), $email, $full_name, $address, $contact]);
+			return $request->execute([$user_name, session::hashPassword($user_pwd), $email, $full_name, $address, $contact, $role, $location]);
 		}
 		/**
 		 * Fetch admins
@@ -165,6 +171,25 @@
 		{
 			$request = $this->dbh->prepare("DELETE FROM customers WHERE id = ?");
 			return $request->execute([$id]);
+		}
+
+
+		public function fetchCustomersByLocation($location, $limit = 10)
+		{
+			$request = $this->dbh->prepare("SELECT * FROM customers WHERE conn_location = ? ORDER BY id DESC  LIMIT $limit");
+			if ($request->execute([$location])) {
+				return $request->fetchAll();
+			}
+			return false;
+		}
+
+		public function fetchProductsByCustomerLocation($location)
+		{
+			$request = $this->dbh->prepare("SELECT p.*, COUNT(c.id) as customer_count FROM packages p JOIN customers c ON p.id = c.package_id WHERE c.conn_location = ? GROUP BY p.id");
+			if ($request->execute([$location])) {
+				return $request->fetchAll();
+			}
+			return false;
 		}
 
 
