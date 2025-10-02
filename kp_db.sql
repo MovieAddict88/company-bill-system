@@ -83,6 +83,7 @@ CREATE TABLE `customers` (
   `conn_type` varchar(10) NOT NULL,
   `package_id` int(10) NOT NULL,
   `contact` varchar(20) NOT NULL,
+  `login_code` varchar(255) DEFAULT NULL,
   `dropped` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

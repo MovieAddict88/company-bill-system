@@ -102,6 +102,15 @@
 			}
 			return false;
 		}
+
+		public function fetchCustomerByLoginCode($login_code)
+		{
+			$request = $this->dbh->prepare("SELECT * FROM customers WHERE login_code = ?");
+			if ($request->execute([$login_code])) {
+				return $request->fetch();
+			}
+			return false;
+		}
 		/**
 		 * Update Admin
 		 */
@@ -134,11 +143,11 @@
 		 * 
 		 */
 		
-		public function addCustomer($full_name, $nid, $address, $conn_location, $email, $package, $ip_address, $conn_type, $contact)
+		public function addCustomer($full_name, $nid, $address, $conn_location, $email, $package, $ip_address, $conn_type, $contact, $login_code)
 		{
-			$request = $this->dbh->prepare("INSERT INTO customers (`full_name`, `nid`, `address`, `conn_location`, `email`, `package_id`, `ip_address`, `conn_type`, `contact`) VALUES(?,?,?,?,?,?,?,?,?)");
+			$request = $this->dbh->prepare("INSERT INTO customers (`full_name`, `nid`, `address`, `conn_location`, `email`, `package_id`, `ip_address`, `conn_type`, `contact`, `login_code`) VALUES(?,?,?,?,?,?,?,?,?,?)");
 			// Do not forget to encrypt the pasword before saving
-			return $request->execute([$full_name, $nid, $address, $conn_location, $email, $package, $ip_address, $conn_type, $contact]);
+			return $request->execute([$full_name, $nid, $address, $conn_location, $email, $package, $ip_address, $conn_type, $contact, $login_code]);
 		}
 		/**
 		 * Fetch Customers
