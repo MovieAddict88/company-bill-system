@@ -28,7 +28,7 @@
 </head>
 <body>
 	<header class="cd-main-header">
-		<a href="#0" class="cd-logo text-white">Cornerstone | ISP Solution</a>
+		<a href="#0" class="cd-logo text-white">Cornerstone | <?php echo ucfirst($_SESSION['user_role'] ?? 'Admin'); ?></a>
 		
 		<!-- <div class="cd-search is-hidden">
 			<form action="#0">
@@ -43,7 +43,7 @@
 				<li class="has-children account">
 					<a href="#0">
 						<img src="component/img/cs.png" alt="avatar">
-						<?php echo $_SESSION["admin_session"]; ?>
+						<?php echo $_SESSION["admin_session"]; ?> (<?php echo ucfirst($_SESSION['user_role'] ?? 'Admin'); ?>)
 					</a>
 					</ul>
 				</li>
@@ -97,3 +97,56 @@
 
 		<div class="content-wrapper">
 		<div class="container-fluid">
+		<?php if ($_SESSION['user_role'] == 'admin'): ?>
+		<nav class="cd-side-nav">
+			<ul>
+				<li class="overview">
+					<a href="index.php">Dashboard</a>
+				</li>
+				<li class="has-children overview active">
+					<a href="#0">Collection / Balance<!-- <span class="count">3</span> --></a>
+
+					<ul>
+						<li><a href="daily_data.php">Collect / Balance</a></li>
+						<li><a href="bills.php">Monthly Billing</a></li>
+					</ul>
+				</li>
+
+				<li class="has-children overview active">
+					<a href="#0">Products</a>
+					<ul>
+						<li><a href="production.php">Stock Entry</a></li>
+						<li><a href="production_stat.php">Products Stock</a></li>
+					</ul>
+				</li>
+			</ul>
+
+			<ul>
+				<li class="cd-label">Administration</li>
+				<li class="bookmarks">
+					<a href="products.php">Products</a>
+				</li>
+				<li class="users">
+					<a href="customers.php">Customers</a>
+				</li>
+
+				<li class="users">
+					<a href="user.php">Users</a>
+				</li>
+				<li><a href="logout.php">Logout</a></li>
+			</ul>
+			<!-- <ul>
+				<li class="cd-label">Action</li>
+				<li class="action-btn"><a href="#0">INSERT DATA</a></li>
+			</ul> -->
+		</nav>
+		<?php else: ?>
+		<nav class="cd-side-nav">
+			<ul>
+				<li class="overview">
+					<a href="index.php">Dashboard</a>
+				</li>
+				<li><a href="logout.php">Logout</a></li>
+			</ul>
+		</nav>
+		<?php endif; ?>

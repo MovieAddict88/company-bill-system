@@ -106,6 +106,25 @@
 					        <label for="contact">Contact</label>
 					        <input type="tel" class="form-control" id="contact" name="contact" placeholder="Contact">
 					      </div>
+					      <div class="form-group">
+					        <label for="role">Role</label>
+					        <select class="form-control" id="role" name="role">
+							<option value="admin">Admin</option>
+							<option value="employer">Employer</option>
+					        </select>
+					      </div>
+					      <div class="form-group" id="location-group" style="display: none;">
+					        <label for="location">Location</label>
+					        <select class="form-control" id="location" name="location">
+							<option>Select Location</option>
+					        </select>
+					      </div>
+					      <div class="form-group" id="branch-group" style="display: none;">
+					        <label for="branch">Branch</label>
+					        <select class="form-control" id="branch" name="branch">
+							<option>Select Branch</option>
+					        </select>
+					      </div>
 				</div>
 				<div class="modal-footer">
 							<button type="submit" class="btn btn-primary">Submit</button>
@@ -120,16 +139,60 @@
 	include 'includes/footer.php';
 	?>
 	<script type="text/javascript">
+	function getLocations() {
+		$.ajax({
+			method: "GET",
+			url:"get_locations.php",
+			success: function(data){
+				$('#location').html(data);
+			}
+		});
+	}
+
+	getLocations();
+
+	$('#role').on('change', function() {
+		if (this.value == 'employer' || this.value == 'admin') {
+			$('#location-group').show();
+			$('#branch-group').show();
+		} else {
+			$('#location-group').hide();
+			$('#branch-group').hide();
+		}
+	});
+
+	$('#location').on('change', function(){
+		var location_id = $(this).val();
+		if(location_id){
+			$.ajax({
+				type:'POST',
+				url:'get_branches.php',
+				data:'location_id='+location_id,
+				success:function(html){
+					$('#branch').html(html);
+				}
+			});
+		}else{
+			$('#branch').html('<option value="">Select location first</option>');
+		}
+	});
+
 	$('#insert_form').on('submit',function(event){
 		event.preventDefault();
 		$.ajax({
 			url: "user_approve.php?p=add",
 			method:"POST",
 			data:$('#insert_form').serialize(),
+			dataType: "json",
 			success: function (data) {
-				$('#insert_form')[0].reset();
-				$('#add_data_Modal').modal('hide');
-				viewData();
+				if (data.status == 'success') {
+					$('#insert_form')[0].reset();
+					$('#add_data_Modal').modal('hide');
+					viewData();
+					alert(data.message);
+				} else {
+					alert(data.message);
+				}
 			}
 		});
 	});
