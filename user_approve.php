@@ -20,7 +20,12 @@
 			$address = $_POST['address'];
 			$contact = $_POST['contact'];
 			$role = $_POST['role'];
-			$location = isset($_POST['location']) ? $_POST['location'] : null;
+			$location = null;
+			if (isset($_POST['major_location']) && isset($_POST['branch_location'])) {
+				$major_location = $_POST['major_location'];
+				$branch_location = ucwords(strtolower($_POST['branch_location']));
+				$location = $major_location . ', ' . $branch_location;
+			}
 
 			$response = array();
 			// Check if password are the same

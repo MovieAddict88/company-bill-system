@@ -114,8 +114,14 @@
 					        </select>
 					      </div>
 					      <div class="form-group" id="location-group" style="display: none;">
-					        <label for="location">Location</label>
-					        <input type="text" class="form-control" id="location" name="location" placeholder="Location">
+					        <label for="major_location">Major Location</label>
+					        <select class="form-control" id="major_location" name="major_location">
+								<option value="LUZON">LUZON</option>
+								<option value="VISAYAS">VISAYAS</option>
+								<option value="MINDANAO">MINDANAO</option>
+					        </select>
+					        <label for="branch_location">Branch Location</label>
+					        <input type="text" class="form-control" id="branch_location" name="branch_location" placeholder="Branch Location">
 					      </div>
 				</div>
 				<div class="modal-footer">
