@@ -19,6 +19,8 @@
 			$fullname = $_POST['fullname'];
 			$address = $_POST['address'];
 			$contact = $_POST['contact'];
+			$role = $_POST['role'];
+			$location = isset($_POST['location']) ? $_POST['location'] : null;
 
 			$response = array();
 			// Check if password are the same
@@ -29,7 +31,7 @@
 			}elseif ($admins->adminExists($_POST['username'])) {
 				$response['status'] = 'error';
 				$response['message'] = 'This username is already in use by another admin.';
-			}elseif (!$admins->addNewAdmin($username, $password, $email, $fullname, $address, $contact)) {
+			}elseif (!$admins->addNewAdmin($username, $password, $email, $fullname, $address, $contact, $role, $location)) {
 				$response['status'] = 'error';
 				$response['message'] = 'An error occured while saving the new admin.';
 			}else{
