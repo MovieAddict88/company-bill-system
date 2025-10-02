@@ -19,25 +19,34 @@
 			$fullname = $_POST['fullname'];
 			$address = $_POST['address'];
 			$contact = $_POST['contact'];
-
-			if (isset($_POST)) 
-			{
-
-				$errors = array();
-
-				// Check if password are the same
-				if (!$admins->ArePasswordSame($_POST['password'], $_POST['repassword'])) 
-				{
-					session::set('errors', ['The two passwords do not match.']);
-				}elseif ($admins->adminExists($_POST['username'])) {
-					session::set('errors', ['This username is already in use by another admin.']);
-				}elseif (!$admins->addNewAdmin($username, $password, $email, $fullname, $address, $contact)) {
-					session::set('errors', ['An error occured while saving the new admin.']);
-				}else{
-					session::set('confirm', 'New admin added successfully!');
-					unset($_POST['repassword']);
-				}
+			$role = $_POST['role'];
+			$location = null;
+			if (isset($_POST['major_location']) && isset($_POST['branch_location'])) {
+				$major_location = $_POST['major_location'];
+				$branch_location = ucwords(strtolower($_POST['branch_location']));
+				$location = $major_location . ', ' . $branch_location;
 			}
+
+			$response = array();
+			// Check if password are the same
+			if (!$admins->ArePasswordSame($_POST['password'], $_POST['repassword']))
+			{
+				$response['status'] = 'error';
+				$response['message'] = 'The two passwords do not match.';
+			}elseif ($admins->adminExists($_POST['username'])) {
+				$response['status'] = 'error';
+				$response['message'] = 'This username is already in use by another admin.';
+			}elseif (!$admins->addNewAdmin($username, $password, $email, $fullname, $address, $contact, $role, $location)) {
+				$response['status'] = 'error';
+				$response['message'] = 'An error occured while saving the new admin.';
+			}else{
+				$response['status'] = 'success';
+				$response['message'] = 'New admin added successfully!';
+				unset($_POST['repassword']);
+			}
+			header('Content-Type: application/json');
+			echo json_encode($response);
+			exit();
 	}else if($page == 'del'){
 		$id = $_POST['id'];
 		if (!$admins->deleteUser($id)) 

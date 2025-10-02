@@ -106,6 +106,23 @@
 					        <label for="contact">Contact</label>
 					        <input type="tel" class="form-control" id="contact" name="contact" placeholder="Contact">
 					      </div>
+					      <div class="form-group">
+					        <label for="role">Role</label>
+					        <select class="form-control" id="role" name="role">
+							<option value="admin">Admin</option>
+							<option value="employer">Employer</option>
+					        </select>
+					      </div>
+					      <div class="form-group" id="location-group" style="display: none;">
+					        <label for="major_location">Major Location</label>
+					        <select class="form-control" id="major_location" name="major_location">
+								<option value="LUZON">LUZON</option>
+								<option value="VISAYAS">VISAYAS</option>
+								<option value="MINDANAO">MINDANAO</option>
+					        </select>
+					        <label for="branch_location">Branch Location</label>
+					        <input type="text" class="form-control" id="branch_location" name="branch_location" placeholder="Branch Location">
+					      </div>
 				</div>
 				<div class="modal-footer">
 							<button type="submit" class="btn btn-primary">Submit</button>
@@ -120,16 +137,30 @@
 	include 'includes/footer.php';
 	?>
 	<script type="text/javascript">
+	$('#role').on('change', function() {
+		if (this.value == 'employer') {
+			$('#location-group').show();
+		} else {
+			$('#location-group').hide();
+		}
+	});
+
 	$('#insert_form').on('submit',function(event){
 		event.preventDefault();
 		$.ajax({
 			url: "user_approve.php?p=add",
 			method:"POST",
 			data:$('#insert_form').serialize(),
+			dataType: "json",
 			success: function (data) {
-				$('#insert_form')[0].reset();
-				$('#add_data_Modal').modal('hide');
-				viewData();
+				if (data.status == 'success') {
+					$('#insert_form')[0].reset();
+					$('#add_data_Modal').modal('hide');
+					viewData();
+					alert(data.message);
+				} else {
+					alert(data.message);
+				}
 			}
 		});
 	});
