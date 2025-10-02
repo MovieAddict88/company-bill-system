@@ -35,7 +35,9 @@
 	$user_name = htmlspecialchars( $_POST['username'], ENT_QUOTES, 'UTF-8' );
 	$user_pwd = htmlspecialchars( $_POST['password'], ENT_QUOTES, 'UTF-8' );
 
-	if (!$admins->loginAdmin($user_name, $user_pwd)) 
+	$login_data = $admins->loginAdmin($user_name, $user_pwd);
+
+	if (!$login_data)
 	{
 		session::set('error', 'Cannot connect you. Check your credentials.');
 		$commons->redirectTo(SITE_PATH.'login.php');
@@ -43,6 +45,8 @@
 	}
 
 	// Otherwise we can set a session to the admin and send him to the dashboard
-	// The session will hold only the username.
-	session::set('admin_session', $user_name);
+	// The session will hold the username, role, and location.
+	session::set('admin_session', $login_data->user_name);
+	session::set('user_role', $login_data->role);
+	session::set('user_location', $login_data->location);
 	$commons->redirectTo(SITE_PATH.'index.php');

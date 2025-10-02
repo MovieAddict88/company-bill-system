@@ -21,13 +21,14 @@
 			$ip_address = $_POST['ip_address'];
 			$conn_type = $_POST['conn_type'];
 			$contact = $_POST['contact'];
+			$login_code = bin2hex(random_bytes(16));
 
 			if (isset($_POST)) 
 			{
 
 				$errors = array();
 				// Check if password are the same
-				if (!$admins->addCustomer($full_name, $nid, $address, $conn_location, $email, $package, $ip_address, $conn_type, $contact)) 
+				if (!$admins->addCustomer($full_name, $nid, $address, $conn_location, $email, $package, $ip_address, $conn_type, $contact, $login_code))
 				{
 					session::set('errors', ['Couldn\'t Add New Customer']);
 				}else{
@@ -149,6 +150,7 @@
 					<td class="search"><?=$customer->email?></td>
 					<td class="search"><?=$customer->conn_type?></td>
 					<td class="search"><?=$customer->contact?></td>
+					<td class="search"><?=$customer->login_code?></td>
 				</tr>
 			<?php
 			}

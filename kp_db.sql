@@ -83,6 +83,7 @@ CREATE TABLE `customers` (
   `conn_type` varchar(10) NOT NULL,
   `package_id` int(10) NOT NULL,
   `contact` varchar(20) NOT NULL,
+  `login_code` varchar(255) DEFAULT NULL,
   `dropped` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -135,7 +136,9 @@ CREATE TABLE `kp_user` (
   `contact` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
   `address` text COLLATE utf8_unicode_ci,
   `c_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `authentication` int(1) NOT NULL DEFAULT '0'
+  `authentication` int(1) NOT NULL DEFAULT '0',
+  `role` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'admin',
+  `location` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --

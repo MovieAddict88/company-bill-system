@@ -61,6 +61,7 @@
 							<th>Email </th>
 							<th>Contact</th>
 							<th>Type</th>
+							<th>Login Code</th>
 						</tr>
 					</thead>
 					<tbody>

@@ -1,4 +1,90 @@
-<?php include 'includes/header.php'; ?>
+<?php
+include 'includes/header.php';
+require_once "includes/classes/admin-class.php";
+
+$admins = new Admins($dbh);
+
+// Check user role from session
+$user_role = $_SESSION['user_role'] ?? 'admin';
+
+if ($user_role == 'employer') {
+    // Employer Dashboard
+    $location = $_SESSION['user_location'];
+    $customers = $admins->fetchCustomersByLocation($location);
+    $products = $admins->fetchProductsByCustomerLocation($location);
+?>
+<div class="container-fluid">
+    <h3>Employer Dashboard - Location: <?php echo htmlspecialchars($location); ?></h3>
+    <a href="employer_customers.php" class="btn btn-info" style="margin-bottom: 10px;">View Customers</a>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Customers in Your Location</div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($customers): ?>
+                                <?php foreach ($customers as $customer): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($customer->full_name); ?></td>
+                                        <td><?php echo htmlspecialchars($customer->address); ?></td>
+                                        <td><?php echo htmlspecialchars($customer->contact); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="3">No customers found for this location.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Products Availed by Customers in Your Location</div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Package Name</th>
+                                <th>Fee</th>
+                                <th>Number of Customers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($products): ?>
+                                <?php foreach ($products as $product): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($product->name); ?></td>
+                                        <td><?php echo htmlspecialchars($product->fee); ?></td>
+                                        <td><?php echo htmlspecialchars($product->customer_count); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="3">No products found for this location.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+} else {
+    // Admin Dashboard
+?>
 <div class="col-md-6">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -89,18 +175,6 @@
                 var barGraph = new Chart(ctx, {
                     type: 'bar',
                     data: chartdata
-                    // options: {
-                    //     scales: {
-                    //         yAxes: [{
-                    //             ticks: {
-                    //                 // Create scientific notation labels
-                    //                 callback: function(value, index, values) {
-                    //                     return value.toExponential();
-                    //                 }
-                    //             }
-                    //         }]
-                    //     }
-                    // }
                 });
             },
             error: function(data) {
@@ -110,3 +184,9 @@
     });
 
 </script>
+<?php
+} // End of role check
+if ($user_role == 'employer') {
+    include 'includes/footer.php';
+}
+?>
