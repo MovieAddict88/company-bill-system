@@ -176,7 +176,7 @@
 
 		public function fetchCustomersByLocation($location, $limit = 10)
 		{
-			$request = $this->dbh->prepare("SELECT * FROM customers WHERE conn_location = ? ORDER BY id DESC  LIMIT $limit");
+			$request = $this->dbh->prepare("SELECT * FROM customers WHERE ? LIKE CONCAT('%', conn_location, '%') ORDER BY id DESC  LIMIT $limit");
 			if ($request->execute([$location])) {
 				return $request->fetchAll();
 			}
@@ -185,7 +185,7 @@
 
 		public function fetchProductsByCustomerLocation($location)
 		{
-			$request = $this->dbh->prepare("SELECT p.*, COUNT(c.id) as customer_count FROM packages p JOIN customers c ON p.id = c.package_id WHERE c.conn_location = ? GROUP BY p.id");
+			$request = $this->dbh->prepare("SELECT p.*, COUNT(c.id) as customer_count FROM packages p JOIN customers c ON p.id = c.package_id WHERE ? LIKE CONCAT('%', c.conn_location, '%') GROUP BY p.id");
 			if ($request->execute([$location])) {
 				return $request->fetchAll();
 			}
